@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "Call",
+        "Email",
+        "Meeting",
+        "Note",
+        "Task"
+      ]
+    },
+    "note": {
+      "type": "string"
+    },
+    "contactId": {
+      "type": "string"
+    },
+    "dealId": {
+      "type": "string"
+    },
+    "createdBy": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Activity"
+}
