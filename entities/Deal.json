@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "value": {
+      "type": "number"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "New Lead",
+        "Contacted",
+        "Qualified",
+        "Discovery",
+        "Proposal Sent",
+        "Negotiation",
+        "Won",
+        "Lost"
+      ]
+    },
+    "probability": {
+      "type": "number"
+    },
+    "closeDate": {
+      "type": "string"
+    },
+    "contactId": {
+      "type": "string"
+    },
+    "companyId": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Deal"
+}
