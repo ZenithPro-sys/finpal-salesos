@@ -1,18 +1,22 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/login', '/register', '/api/auth', '/_next', '/favicon']
-
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const isPublic = PUBLIC_PATHS.some(p => pathname.startsWith(p))
   const token = request.cookies.get('finpal_token')?.value
 
-  if (!isPublic && !token) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Allow public paths
+  if (
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next') ||
+    pathname === '/favicon.ico'
+  ) {
+    return NextResponse.next()
   }
 
-  if (pathname === '/' || pathname === '/dashboard' && !token) {
+  // Redirect to login if no token
+  if (!token) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
