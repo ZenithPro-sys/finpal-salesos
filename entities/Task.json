@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "dueDate": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "High",
+        "Medium",
+        "Low"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "In Progress",
+        "Done"
+      ]
+    },
+    "contactId": {
+      "type": "string"
+    },
+    "dealId": {
+      "type": "string"
+    },
+    "assignedTo": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Task"
+}
