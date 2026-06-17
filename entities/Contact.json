@@ -1,0 +1,54 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "New Lead",
+        "Referral",
+        "Social",
+        "Website",
+        "Cold Outreach"
+      ]
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "New Lead",
+        "Contacted",
+        "Qualified",
+        "Discovery",
+        "Proposal Sent",
+        "Negotiation",
+        "Won",
+        "Lost"
+      ]
+    },
+    "leadScore": {
+      "type": "number"
+    },
+    "tags": {
+      "type": "string"
+    },
+    "assignedTo": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Contact"
+}
