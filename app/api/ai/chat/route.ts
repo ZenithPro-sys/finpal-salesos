@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateText, type ModelMessage } from 'ai'
+import { createAnthropic } from '@ai-sdk/anthropic'
+
+// Use the Anthropic API directly so Tanya does not depend on the AI Gateway.
+const anthropic = createAnthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+})
 
 // Avoid the edge runtime when using the AI SDK
 export const runtime = 'nodejs'
@@ -37,8 +43,18 @@ export async function POST(req: NextRequest) {
       .filter((m) => m.role === 'user' || m.role === 'assistant')
       .map((m) => ({ role: m.role, content: m.content }) as ModelMessage)
 
+    if (!process.env.ANTHROPIC_API_KEY) {
+      return NextResponse.json(
+        {
+          reply:
+            "I'm ready to go, but my Anthropic API key isn't set yet. Add ANTHROPIC_API_KEY to the project and I'll be live instantly.",
+        },
+        { status: 402 },
+      )
+    }
+
     const { text } = await generateText({
-      model: 'openai/gpt-5.4-mini',
+      model: anthropic('claude-haiku-4-5'),
       system: SYSTEM_PROMPT,
       messages: modelMessages,
     })
@@ -49,14 +65,18 @@ export async function POST(req: NextRequest) {
 
     const message = error instanceof Error ? error.message : String(error)
 
-    // Surface the AI Gateway billing gate clearly so it's actionable.
-    if (message.includes('credit card') || message.includes('customer_verification_required')) {
+    // Surface an invalid/missing Anthropic key clearly so it's actionable.
+    if (
+      message.includes('401') ||
+      message.toLowerCase().includes('api key') ||
+      message.toLowerCase().includes('authentication')
+    ) {
       return NextResponse.json(
         {
           reply:
-            "I'm connected and ready, but the AI Gateway needs a verified credit card on the Vercel team before I can think. Add one in Vercel → your team → AI → Add credit card, and I'll be live instantly.",
+            "My Anthropic API key looks invalid. Double-check ANTHROPIC_API_KEY in the project settings and I'll be right back.",
         },
-        { status: 402 },
+        { status: 401 },
       )
     }
 
