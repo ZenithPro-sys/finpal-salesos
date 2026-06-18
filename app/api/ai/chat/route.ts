@@ -46,6 +46,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply: text })
   } catch (error) {
     console.log('[v0] Tanya chat error:', error)
+
+    const message = error instanceof Error ? error.message : String(error)
+
+    // Surface the AI Gateway billing gate clearly so it's actionable.
+    if (message.includes('credit card') || message.includes('customer_verification_required')) {
+      return NextResponse.json(
+        {
+          reply:
+            "I'm connected and ready, but the AI Gateway needs a verified credit card on the Vercel team before I can think. Add one in Vercel → your team → AI → Add credit card, and I'll be live instantly.",
+        },
+        { status: 402 },
+      )
+    }
+
     return NextResponse.json(
       { reply: "I hit a snag — try again in a second!" },
       { status: 500 },
