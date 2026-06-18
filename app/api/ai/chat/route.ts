@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateText, type ModelMessage } from 'ai'
-import { createAnthropic } from '@ai-sdk/anthropic'
+import { createOpenAI } from '@ai-sdk/openai'
 
-// Use the Anthropic API directly so Tanya does not depend on the AI Gateway.
-const anthropic = createAnthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
+// Call OpenAI directly so Tanya does not depend on the AI Gateway billing gate.
+// The key is read from OPENAI_API_KEY, falling back to ANTHROPIC_API_KEY where
+// the project stored the OpenAI key under that name.
+const apiKey = process.env.OPENAI_API_KEY ?? process.env.ANTHROPIC_API_KEY
+
+const openai = createOpenAI({ apiKey })
 
 // Avoid the edge runtime when using the AI SDK
 export const runtime = 'nodejs'
@@ -43,18 +45,18 @@ export async function POST(req: NextRequest) {
       .filter((m) => m.role === 'user' || m.role === 'assistant')
       .map((m) => ({ role: m.role, content: m.content }) as ModelMessage)
 
-    if (!process.env.ANTHROPIC_API_KEY) {
+    if (!apiKey) {
       return NextResponse.json(
         {
           reply:
-            "I'm ready to go, but my Anthropic API key isn't set yet. Add ANTHROPIC_API_KEY to the project and I'll be live instantly.",
+            "I'm ready to go, but my API key isn't set yet. Add OPENAI_API_KEY to the project and I'll be live instantly.",
         },
         { status: 402 },
       )
     }
 
     const { text } = await generateText({
-      model: anthropic('claude-haiku-4-5'),
+      model: openai('gpt-4o-mini'),
       system: SYSTEM_PROMPT,
       messages: modelMessages,
     })
@@ -63,18 +65,30 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.log('[v0] Tanya chat error:', error)
 
-    const message = error instanceof Error ? error.message : String(error)
+    const message = (error instanceof Error ? error.message : String(error)).toLowerCase()
 
-    // Surface an invalid/missing Anthropic key clearly so it's actionable.
+    // Out of credits / billing not set up on the provider account.
+    if (message.includes('quota') || message.includes('billing') || message.includes('exceeded')) {
+      return NextResponse.json(
+        {
+          reply:
+            "I'm wired up correctly, but the OpenAI account is out of quota. Add billing/credits at platform.openai.com → Settings → Billing, and I'll respond instantly.",
+        },
+        { status: 402 },
+      )
+    }
+
+    // Invalid or missing key.
     if (
       message.includes('401') ||
-      message.toLowerCase().includes('api key') ||
-      message.toLowerCase().includes('authentication')
+      message.includes('api key') ||
+      message.includes('authentication') ||
+      message.includes('incorrect api key')
     ) {
       return NextResponse.json(
         {
           reply:
-            "My Anthropic API key looks invalid. Double-check ANTHROPIC_API_KEY in the project settings and I'll be right back.",
+            "My API key looks invalid. Double-check OPENAI_API_KEY in the project settings and I'll be right back.",
         },
         { status: 401 },
       )
