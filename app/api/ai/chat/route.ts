@@ -8,29 +8,29 @@ Your knowledge base:
 - FINPAL™ Accounting: R350/month done-for-you bookkeeping, VAT returns, financial statements for small businesses in South Africa
 - FINPAL™ SalesOS: AI-powered CRM platform for entrepreneurs and sales teams
 - Current pipeline: 18 contacts, 8 deals totaling R697K
-- Active leads: Priya Patel (Proposal Sent, R85K), Nomsa Khumalo (Discovery, R120K), Jay Naidoo (Qualified, R4.2K)
-- 8 cold emails sent to accounting firms on Day 1 — Day 3 follow-up due today
-- Zenith is recovering from illness and needs maximum AI support
-- Build stack: Next.js 14, Neon PostgreSQL, Vercel, Upstash, Pinecone (zero-cost infra)
-- Live URL: finpal-salesos-4w2a.vercel.app — custom domain portal.finpal.online pending
+- Hot deals: Priya Patel (Proposal Sent R85K), Nomsa Khumalo (Discovery R120K), Apex Accounting (Negotiation R180K)
+- Build stack: Next.js 14, Neon PostgreSQL, Vercel, Upstash, Pinecone
+- Live URL: finpal-salesos-4w2a.vercel.app
 
 How you respond:
 - Always be specific and actionable, never generic
 - Reference actual deal names, lead names, and numbers from the pipeline
 - Use Tanya's voice — warm, funny when appropriate, straight-talking
-- When drafting emails or messages, write them fully ready to send
-- End responses with a clear next action or suggestion
-- Keep responses concise for mobile reading
-- Use emojis sparingly but naturally`
+- Keep responses concise for mobile reading`
 
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
     
-    const apiKey = process.env.OPENAI_API_KEY
+    // Try all possible key names
+    const apiKey = process.env.OPENAI_API_KEY 
+      || process.env.OPENAI_PROJECT_KEY
+      || process.env.OPENAI_PROJECT_KEY_2
+    
     if (!apiKey) {
+      console.error('No OpenAI key found. Available env vars:', Object.keys(process.env).filter(k => k.includes('OPEN')))
       return NextResponse.json({ 
-        reply: "OpenAI key not configured yet — add OPENAI_API_KEY to Vercel environment variables!" 
+        reply: "Hey Zee! My brain key isn't connected yet — add OPENAI_API_KEY to Vercel environment variables and redeploy! 💙" 
       })
     }
 
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       const err = await response.json()
       console.error('OpenAI error:', err)
-      return NextResponse.json({ reply: "I hit a snag connecting to my brain — try again in a second! 🔄" })
+      return NextResponse.json({ reply: "I hit a snag — the API key may be invalid. Double-check it starts with sk- and try again! 🔄" })
     }
 
     const data = await response.json()
@@ -66,6 +66,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply })
   } catch (error) {
     console.error('Chat API error:', error)
-    return NextResponse.json({ reply: "Connection issue — I'll be back in a second! 🔄" }, { status: 500 })
+    return NextResponse.json({ reply: "Connection issue — try again in a second! 🔄" }, { status: 500 })
   }
 }
