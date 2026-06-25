@@ -21,27 +21,23 @@ How you respond:
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
-    
-    // Try all possible key names
-    const apiKey = process.env.OPENAI_API_KEY 
-      || process.env.OPENAI_PROJECT_KEY
-      || process.env.OPENAI_PROJECT_KEY_2
-    
+
+    const apiKey = process.env.GROQ_API_KEY
+
     if (!apiKey) {
-      console.error('No OpenAI key found. Available env vars:', Object.keys(process.env).filter(k => k.includes('OPEN')))
       return NextResponse.json({ 
-        reply: "Hey Zee! My brain key isn't connected yet — add OPENAI_API_KEY to Vercel environment variables and redeploy! 💙" 
+        reply: "Hey Zee! Add GROQ_API_KEY to Vercel environment variables and redeploy! 💙" 
       })
     }
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'llama-3.1-70b-versatile',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           ...messages.map((m: { role: string; content: string }) => ({
@@ -56,8 +52,8 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const err = await response.json()
-      console.error('OpenAI error:', err)
-      return NextResponse.json({ reply: "I hit a snag — the API key may be invalid. Double-check it starts with sk- and try again! 🔄" })
+      console.error('Groq error:', err)
+      return NextResponse.json({ reply: "API snag — check your GROQ_API_KEY in Vercel! 🔄" })
     }
 
     const data = await response.json()
@@ -66,6 +62,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply })
   } catch (error) {
     console.error('Chat API error:', error)
-    return NextResponse.json({ reply: "Connection issue — try again in a second! 🔄" }, { status: 500 })
+    return NextResponse.json({ reply: "Connection issue — try again! 🔄" }, { status: 500 })
   }
 }
