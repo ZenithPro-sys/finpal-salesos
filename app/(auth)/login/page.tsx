@@ -34,8 +34,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#0B0C10] px-4">
       <div className="w-full max-w-md p-8 rounded-2xl" style={{background:'rgba(17,19,24,0.9)', border:'1px solid rgba(0,217,255,0.15)'}}>
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#00D9FF]">FINPAL™</h1>
-          <p className="text-[#CFD8E3]/60 mt-1 text-sm">SalesOS — Your AI Sales Team</p>
+          <h1 className="text-3xl font-bold text-[#00D9FF]">SalesPal</h1>
+          <p className="text-[#CFD8E3]/60 mt-1 text-sm">Your AI Sales Team</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -75,7 +75,7 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-[#CFD8E3]/30 text-xs mt-6">
-          FINPAL™ SalesOS © 2026 • Powered by AI
+          SalesPal © 2026 • Powered by AI
         </p>
       </div>
     </div>

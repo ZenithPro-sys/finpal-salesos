@@ -6,14 +6,14 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'FINPAL™ SalesOS — AI-Powered CRM',
+  title: 'SalesPal — AI-Powered CRM',
   description: 'Your AI Sales Team. Working 24/7.',
   keywords: 'CRM, sales, AI, automation, South Africa',
   openGraph: {
-    title: 'FINPAL™ SalesOS',
+    title: 'SalesPal',
     description: 'AI-powered CRM & Sales Automation Platform',
     url: 'https://app.finpal.online',
-    siteName: 'FINPAL™ SalesOS',
+    siteName: 'SalesPal',
     locale: 'en_ZA',
     type: 'website',
   },
