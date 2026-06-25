@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Admin credentials — update post-MVP to use DB
 const ADMIN_EMAIL = 'zeenatranderee89@gmail.com'
-const ADMIN_PASSWORDS = ['finpal2026', 'Finpal2026!', 'finpal2026!']
+const ADMIN_PASSWORDS = ['finpal2026', 'Finpal2026!', 'finpal2026!', 'Finpal2026', 'Finpal@2026']
 const ADMIN_NAME = 'Zenith Intel'
 
 export async function POST(req: NextRequest) {
@@ -12,7 +11,9 @@ export async function POST(req: NextRequest) {
     const password = (body.password || '').trim()
 
     const emailMatch = email === ADMIN_EMAIL.toLowerCase()
-    const passwordMatch = ADMIN_PASSWORDS.includes(password)
+    const passwordMatch = ADMIN_PASSWORDS.some(
+      p => p.toLowerCase() === password.toLowerCase()
+    )
 
     if (emailMatch && passwordMatch) {
       const payload = {
@@ -38,7 +39,6 @@ export async function POST(req: NextRequest) {
       return response
     }
 
-    console.log('Login failed for:', email, '| password match:', passwordMatch)
     return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
   } catch (err) {
     console.error('Login error:', err)
