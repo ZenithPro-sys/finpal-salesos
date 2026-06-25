@@ -1,0 +1,9 @@
+Build FINPAL™ SalesOS login system:
+Single admin login
+Email: zeenatranderee89@gmail.com
+Password: Finpal2026
+On success: redirect to /dashboard
+Set a cookie called finpal_token
+UI: black background #0B0C10, neon blue #00D9FF, silver text
+No database needed — hardcoded admin only for MVP
+Stack: Next.js 14, TypeScript, TailwindCSS
