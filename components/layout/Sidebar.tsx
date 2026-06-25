@@ -31,7 +31,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="flex items-center justify-between p-4 border-b border-[#00D9FF]/10">
         {!collapsed && (
-          <span className="text-xl font-bold text-[#00D9FF] glow-text">SalesPal</span>
+          <span className="text-xl font-bold text-[#00D9FF] glow-text">FINPAL™</span>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}

@@ -33,7 +33,7 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-bold text-[#CFD8E3]">
             Good morning, <span className="text-[#00D9FF]">Zenith</span> 👋
           </h1>
-          <p className="text-[#CFD8E3]/50 text-sm mt-0.5">Wednesday, 18 June 2026 • SalesPal</p>
+          <p className="text-[#CFD8E3]/50 text-sm mt-0.5">Wednesday, 18 June 2026 • FINPAL™ SalesOS</p>
         </div>
       </div>
 
